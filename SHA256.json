@@ -1,0 +1,6 @@
+{
+  ".dockerignore": "46c4a1adedeffc113262a5477a94d16e296532faccc0fc43c940ba0a74c8f15a",
+  "Dockerfile": "900b07d83b7deba3ea859a9fa33de6aa1ceb066dd7af654bb346041e30246bc9",
+  "README.md": "e8e320c4e41d7bc1c80c8883f171907ce6445602b5161eb521a34f961b749a85",
+  "app/main.py": "2565478603771d0b7a4bd9d6620817e764138ff95fdf6e684ea700a89bcec30a"
+}
