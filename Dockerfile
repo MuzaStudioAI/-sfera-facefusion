@@ -8,6 +8,8 @@ ARG FACEFUSION_REF=3.3.2
 RUN git clone --depth 1 --branch ${FACEFUSION_REF} https://github.com/facefusion/facefusion.git /opt/facefusion
 RUN python3 -m pip install --upgrade pip && \
     python3 -m pip install -r /opt/facefusion/requirements.txt && \
+    python3 -m pip uninstall -y onnxruntime && \
+    python3 -m pip install onnxruntime-gpu==1.22.0 && \
     python3 -m pip install fastapi "uvicorn[standard]" python-multipart aiofiles
 COPY app /opt/app
 WORKDIR /opt/app

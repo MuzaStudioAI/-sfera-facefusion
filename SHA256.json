@@ -1,6 +1,6 @@
 {
-  ".dockerignore": "46c4a1adedeffc113262a5477a94d16e296532faccc0fc43c940ba0a74c8f15a",
-  "Dockerfile": "900b07d83b7deba3ea859a9fa33de6aa1ceb066dd7af654bb346041e30246bc9",
-  "README.md": "e8e320c4e41d7bc1c80c8883f171907ce6445602b5161eb521a34f961b749a85",
-  "app/main.py": "2565478603771d0b7a4bd9d6620817e764138ff95fdf6e684ea700a89bcec30a"
+  "Dockerfile": "02d978b69c9c70aa9e79452bfc8af40de8323ae37dddfce085aba1a7c9c20fad",
+  "app/main.py": "3726c98947aae6c032e3b24b7e581531c7779377360fa4f8298c9f2197b4f346",
+  "README.md": "986b51f951985625ebe0208d50ea09fccb0367db00e0669327bdae8566b06b00",
+  ".github/workflows/docker.yml": "bb58e3e44cc1fadeeb00b7637aaf473a704273be8196bafe6f2363fe10e43f10"
 }
