@@ -1,0 +1,57 @@
+name: Build FaceFusion
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: Push image to Cloud.ru
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: facefusion-build
+  cancel-in-progress: false
+
+jobs:
+  docker:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build image
+        run: docker build -t sfera-facefusion:check .
+
+      - name: Check GPU runtime package and API
+        run: |
+          docker run --rm --entrypoint python3 sfera-facefusion:check -c 'import onnxruntime as ort; assert "CUDAExecutionProvider" in ort.get_available_providers(), ort.get_available_providers()'
+          docker run -d --name sfera-check -p 127.0.0.1:8080:8080 sfera-facefusion:check
+          for attempt in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8080/health; then exit 0; fi
+            sleep 2
+          done
+          docker logs sfera-check
+          exit 1
+
+      - name: Publish to Cloud.ru
+        if: ${{ inputs.publish }}
+        env:
+          REGISTRY: sfera-facefusion.cr.cloud.ru
+          REGISTRY_USER: ${{ secrets.CLOUDRU_REGISTRY_USER }}
+          REGISTRY_PASSWORD: ${{ secrets.CLOUDRU_REGISTRY_PASSWORD }}
+        run: |
+          test -n "$REGISTRY_USER" && test -n "$REGISTRY_PASSWORD"
+          printf '%s' "$REGISTRY_PASSWORD" | docker login "$REGISTRY" --username "$REGISTRY_USER" --password-stdin
+          docker tag sfera-facefusion:check "$REGISTRY/sfera-facefusion:$GITHUB_SHA"
+          docker tag sfera-facefusion:check "$REGISTRY/sfera-facefusion:latest"
+          docker push "$REGISTRY/sfera-facefusion:$GITHUB_SHA"
+          docker push "$REGISTRY/sfera-facefusion:latest"
+
+      - name: Clean up
+        if: always()
+        run: |
+          docker rm -f sfera-check || true
+          docker logout sfera-facefusion.cr.cloud.ru || true
